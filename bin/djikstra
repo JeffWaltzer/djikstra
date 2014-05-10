@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'djikstra'
+
+Djikstra::CLI.new.run
