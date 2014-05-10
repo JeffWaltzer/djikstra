@@ -1,10 +1,12 @@
 require "djikstra/version"
+require "djikstra/parser"
+require "djikstra/edge"
 
 module Djikstra
   class CLI
 
     def run
-      puts "Hello!"
+      raise 'not implemented yet!'
     end
 
   end
