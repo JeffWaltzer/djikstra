@@ -1,6 +1,6 @@
 class Djikstra::Parser
 
-  def self.parse(input_text)
+  def self.parse_edges(input_text)
     edges = input_text.
         scan(/\[(.*)\]+/).
         flatten

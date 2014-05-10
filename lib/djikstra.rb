@@ -1,6 +1,7 @@
 require "djikstra/version"
 require "djikstra/parser"
 require "djikstra/edge"
+require "djikstra/node"
 
 module Djikstra
   class CLI
