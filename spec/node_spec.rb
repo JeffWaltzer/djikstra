@@ -1,9 +1,14 @@
 require 'spec_helper'
 
 def nodes_should_have_values(expected_node_values)
-  expected_node_values.each do |node_name, expected_distance|
+  expected_node_values.each do |node_name, expected|
+    previous_node, distance = expected
     it "has correct distance for #{node_name}" do
-      expect(@graph[node_name].distance).to eq expected_distance
+      expect(@graph[node_name].distance).to eq distance
+    end
+
+    it "previous node is #{previous_node}" do
+      expect(@graph[node_name].previous).to eq previous_node
     end
 
   end
@@ -12,7 +17,6 @@ end
 describe "Nodes" do
 
   before do
-
     edge_text =<<-EDGE_TEXT
           [A,B,1]
           [A,C,3]
@@ -22,9 +26,7 @@ describe "Nodes" do
           [C,B,5]
     EDGE_TEXT
 
-    edges = Djikstra::Parser.parse_edges(edge_text)
-
-    @graph=Djikstra::Graph.new(edges)
+    @graph = build_graph(edge_text)
   end
 
   %w{A B C D}.each do |node_name|
@@ -76,86 +78,91 @@ describe "Nodes" do
     expect(@graph.size).to eq 4
   end
 
-  describe 'visit A' do
+  describe 'visits 1st node' do
     before do
-      @node=@graph['A']
-      @node.distance = 0 #starting node has distance of 0
-      @graph.visit_node(@node)
+      @next_node = @graph.start('A')
+      @graph.visit_node(@next_node)
+
+      # @node=@graph['A']
+      # @node.distance = 0 #starting node has distance of 0
+      # @graph.visit_node(@node)
     end
 
     it 'is marked visited' do
-      expect(@node).to be_visited
+      expect(@next_node).to be_visited
     end
 
     nodes_should_have_values(
         {
-            'A' => 0,
-            'B' => 1,
-            'C' => 3,
-            'D' => Float::INFINITY,
+            'A' => [nil,0],
+            'B' => ['A',1],
+            'C' => ['A',3],
+            'D' => [nil,Float::INFINITY],
         })
 
-    it 'picks next to visit' do
-      expect(@graph.next_to_visit).to eq(@graph['B'])
-    end
 
-    context 'and then visit 2nd node' do
+    context 'and then visits 2nd node' do
       before do
         @next_node = @graph.next_to_visit
         @graph.visit_node(@next_node)
       end
 
+      it 'picks B to visit' do
+        expect(@next_node).to eq(@graph['B'])
+      end
+
       nodes_should_have_values(
           {
-              'A' => 0,
-              'B' => 1,
-              'C' => 3,
-              'D' => 9,
+              'A' => [nil,0],
+              'B' => ['A',1],
+              'C' => ['A',3],
+              'D' => ['B',9],
           })
 
       it 'marks next node as visited' do
         expect(@next_node).to be_visited
       end
 
-      it 'picks next to visit' do
-        expect(@graph.next_to_visit).to eq(@graph['C'])
-      end
 
-      context 'and then visit 3rd node' do
+      context 'and then visits 3rd node' do
         before do
           @next_node = @graph.next_to_visit
           @graph.visit_node(@next_node)
         end
 
+        it 'picks C to visit' do
+          expect(@next_node).to eq(@graph['C'])
+        end
+
         nodes_should_have_values(
             {
-                'A' => 0,
-                'B' => 1,
-                'C' => 3,
-                'D' => 5,
+                'A' => [nil,0],
+                'B' => ['A',1],
+                'C' => ['A',3],
+                'D' => ['C',5],
             })
 
         it 'marks next node as visited' do
           expect(@next_node).to be_visited
         end
 
-        it 'picks next to visit' do
-          expect(@graph.next_to_visit).to eq(@graph['D'])
-        end
-
-
-        context 'and then visit 4th node' do
+        context 'and then visits 4th node' do
           before do
             @next_node = @graph.next_to_visit
             @graph.visit_node(@next_node)
           end
 
+
+          it 'picks D to visit' do
+            expect(@next_node).to eq(@graph['D'])
+          end
+
           nodes_should_have_values(
               {
-                  'A' => 0,
-                  'B' => 1,
-                  'C' => 3,
-                  'D' => 5,
+                  'A' => [nil,0],
+                  'B' => ['A',1],
+                  'C' => ['A',3],
+                  'D' => ['C',5],
               })
 
           it 'marks next node as visited' do

@@ -2,7 +2,7 @@ class Djikstra::Parser
 
   def self.parse_edges(input_text)
     edges = input_text.
-        scan(/\[(.*)\]+/).
+        scan(/\[(.*)\]+[\n\r ]/).
         flatten
 
     edges.map do |edge|
