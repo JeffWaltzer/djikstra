@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Djikstra::CLI do
 
-  it 'should execute from command line' do
+  it 'should execute as command line' do
 
     keep = $stdin
     begin

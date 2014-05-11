@@ -1,6 +1,6 @@
 # Djikstra
 
-TODO: Write a gem description
+A command line implementaion of the Djikstra algorithm to find the shortest path.
 
 ## Installation
 
@@ -17,8 +17,7 @@ Or install it yourself as:
     $ gem install djikstra
 
 ## Usage
-
-TODO: Write usage instructions here
+   $ djikstra {graph_filename} {start} {end}
 
 ## Contributing
 

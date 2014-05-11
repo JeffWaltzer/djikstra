@@ -5,7 +5,7 @@ class Djikstra::Graph
 
   def initialize(edges)
     @nodes = {}
-    edges.each { |edge| add_edge(edge) }
+    edges.each { |edge| add_nodes_from_edge(edge) }
   end
 
   def self.build(edge_text)
@@ -20,14 +20,6 @@ class Djikstra::Graph
 
   def distance(to_node)
     @nodes[to_node].distance
-  end
-
-  def size
-    @nodes.size
-  end
-
-  def [](key)
-    @nodes[key]
   end
 
   def start(start_node)
@@ -55,9 +47,6 @@ class Djikstra::Graph
   end
 
 
-  private
-
-
   def search_graph(from_node)
     node = start(from_node)
     begin
@@ -68,21 +57,35 @@ class Djikstra::Graph
 
   def build_route(to_node)
     route = []
+
     node = self[to_node]
     begin
       route.unshift node.label
       node = self[node.previous]
     end while node
+
     route
   end
 
-  def add_edge(edge)
+  def add_nodes_from_edge(edge)
     start_node = nodes[edge.start_node] || Djikstra::Node.new(edge.start_node)
+
+    #Add start_node
     nodes[edge.start_node] = start_node
     start_node.edges[edge.destination_node] = edge
 
-    #make sure add nodes without exits edges
+    #make sure that nodes without exits are added.
+    #Add end_node
     nodes[edge.destination_node] ||= Djikstra::Node.new(edge.destination_node)
+  end
+
+  def size
+    @nodes.size
+  end
+
+
+  def [](key)
+    @nodes[key]
   end
 
 end

@@ -169,7 +169,7 @@ describe "Nodes" do
             expect(@next_node).to be_visited
           end
 
-          it 'picks next to visit' do
+          it 'next visit returns nil to indicate we are done' do
             expect(@graph.next_to_visit).to be_nil
           end
 
