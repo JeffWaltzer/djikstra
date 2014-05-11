@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe "Nodes" do
 
   before do
@@ -16,13 +15,13 @@ describe "Nodes" do
 
     edges = Djikstra::Parser.parse_edges(edge_text)
 
-    @nodes=Djikstra::Node.build_node_hash(edges)
+    @graph=Djikstra::Graph.build(edges)
   end
 
   %w{A B C D}.each do |node_name|
     describe "Node #{node_name}" do
       before do
-        @node = @nodes[node_name]
+        @node = @graph[node_name]
       end
 
       it "exists" do
@@ -30,7 +29,7 @@ describe "Nodes" do
       end
 
       it "has initial distance of infinity" do
-        expect(@nodes[node_name].distance).to eq Float::INFINITY
+        expect(@graph[node_name].distance).to eq Float::INFINITY
       end
 
       it 'has no previous node yet' do
@@ -45,34 +44,34 @@ describe "Nodes" do
 
   describe 'node A' do
     it 'has edges' do
-      expect_same_array(%w(B C), @nodes['A'].edges.keys)
+      expect(@graph['A'].edges.keys.sort).to eq %w(B C)
     end
   end
   describe 'node B' do
     it 'has edges' do
-      expect_same_array(%w(C D), @nodes['B'].edges.keys)
+      expect(@graph['B'].edges.keys.sort).to eq %w(C D)
     end
   end
   describe 'node C' do
     it 'has edges' do
-      expect_same_array(%w(B D), @nodes['C'].edges.keys)
+      expect(@graph['C'].edges.keys.sort).to eq %w(B D)
     end
   end
   describe 'node D' do
     it 'has edges' do
-      expect_same_array(%w(), @nodes['D'].edges.keys)
+      expect(@graph['D'].edges.keys.sort).to eq []
     end
   end
 
   it 'has four nodes' do
-    expect(@nodes.size).to eq 4
+    expect(@graph.size).to eq 4
   end
 
   describe 'visit A' do
     before do
-      @node=@nodes['A']
+      @node=@graph['A']
       @node.distance = 0 #starting node has distance of 0
-      @node.visit(@nodes)
+      @graph.visit_node(@node)
     end
 
     it 'is marked visited' do
@@ -86,9 +85,13 @@ describe "Nodes" do
         'D' => Float::INFINITY,
     }.each do |node_name, expected_distance|
       it "has correct distance for #{node_name}" do
-        expect(@nodes[node_name].distance).to eq expected_distance
+        expect(@graph[node_name].distance).to eq expected_distance
       end
 
+    end
+
+    it 'picks next to visit' do
+      expect(@graph.next_to_visit).to eq(@graph['B'])
     end
   end
 end
