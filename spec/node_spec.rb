@@ -26,7 +26,7 @@ describe "Nodes" do
           [C,B,5]
     EDGE_TEXT
 
-    @graph = build_graph(edge_text)
+    @graph = Djikstra::Graph.build(edge_text)
   end
 
   %w{A B C D}.each do |node_name|

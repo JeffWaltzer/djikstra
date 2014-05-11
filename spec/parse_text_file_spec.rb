@@ -14,7 +14,7 @@ describe 'Parses text' do
     @edges = Djikstra::Parser.parse_edges(in_text)
   end
 
-  it 'should create data structure' do
+  it 'creates data structure' do
     expect(@edges.size).to eq 5
   end
 

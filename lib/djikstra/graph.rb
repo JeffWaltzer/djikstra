@@ -8,9 +8,18 @@ class Djikstra::Graph
     edges.each { |edge| add_edge(edge) }
   end
 
+  def self.build(edge_text)
+    edges = Djikstra::Parser.parse_edges(edge_text)
+    Djikstra::Graph.new(edges)
+  end
+
   def shortest_route(from_node, to_node)
     search_graph(from_node)
     build_route(to_node)
+  end
+
+  def distance(to_node)
+    @nodes[to_node].distance
   end
 
   def size
